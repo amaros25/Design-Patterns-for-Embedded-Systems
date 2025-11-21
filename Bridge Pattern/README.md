@@ -7,7 +7,7 @@ This separation makes the system flexible, testable, and hardware-independent.
 
 ---
 
-## 🚀 Why Bridge Pattern?
+## Why Bridge Pattern?
 
 The **Bridge Pattern** decouples an abstraction (`Motor`) from its implementation (`MotorController`).  
 This allows both sides to develop and change **independently**.
@@ -21,7 +21,7 @@ In embedded development, this is extremely useful because:
 
 ---
 
-## 📘 Concept Overview
+## Concept Overview
 
 ### Abstraction
 `Motor`  
@@ -35,3 +35,38 @@ In embedded development, this is extremely useful because:
 
 ### Concrete Implementors
 Different communication bus implementations:
+
+| Motor Controller Type | Typical Hardware | Description |
+|-----------------------|------------------|-------------|
+| **PWM**               | MOSFET drivers, H-bridges (e.g. L298N, DRV8833) | Simple analog-like motor control via duty cycle |
+| **UART**              | Smart motor drivers (e.g. TMC2209, BLDC ESCs) | Digital protocol, set speed via serial commands |
+| **CAN**               | Automotive ECUs, BLDC CAN ESCs, industrial controllers | Robust multi-node communication bus |
+
+Each controller implements the same interface but performs different low-level actions.
+
+---
+
+##  Advantages in Embedded Development
+### ✔ 1. Hardware Independence
+
+Your application doesn't care whether the motor uses PWM, CAN, or UART.
+
+You can switch hardware drivers without touching the core logic.
+
+### ✔ 2. Easier Porting
+
+Moving from an STM32 to ESP32 or a different motor driver chip becomes easier:
+only the low-level controller class changes.
+
+### ✔ 3. Great for Unit Testing
+
+You can replace real controllers with a MockMotorController.
+### ✔ 4. Cleaner Architecture
+
+No if (CAN) { ... } else if (UART) { ... } inside your Motor class.
+No mixing of business logic and hardware details.
+
+### ✔ 5. Scalable for Future Extensions
+
+Add new motor communication types by simply creating another class:
+ 
